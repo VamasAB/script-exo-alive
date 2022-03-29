@@ -7,13 +7,14 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-def get_task(task_name):
+def get_task_status(task_name):
     tasks = subprocess.check_output(f'tasklist /v /fi "IMAGENAME eq {task_name}"').decode('cp866', 'ignore').split("\r\n")
 
     for task in tasks:
         if task_name in task:
-            return task
+            return False if 'Not Responding' in task else True
     
+    return 0
 
 def exo_handle(start=False):
     # start_uri = 'C:\Program Files\EXO\EXOop4\Eo4Run.Exe'
@@ -33,17 +34,16 @@ def exo_handle(start=False):
 
 if __name__ == '__main__':
     logging.info('Checking for hung processes..')
-    task_name = 'Eo4Run.Exe' #'firefox.exe'
-    task = get_task(task_name)
+    task_name = 'Notepad.exe' #'Eo4Run.Exe' #
+    task = get_task_status(task_name)
 
-    if task:
-        if 'Not Responding' not in task: #in task:
-            logging.info(f'{task_name} is Not Responding, restarting services.')
-            if exo_handle() != 0:
-                time.sleep(45)
-                logging.info(f'{task_name} has been stoped, starting service.')
-                exo_handle(True)
-        else:
-            logging.info(f'Task {task_name} is Running or Unknown.')
-    else:
+    if task == 0:
         logging.info(f'Failed to find {task_name}.')
+    elif task:
+        logging.info(f'Task {task_name} is Running or Unknown.')
+    else:
+        logging.info(f'{task_name} is Not Responding, restarting services.')
+        exo_handle()
+        time.sleep(45)
+        logging.info(f'{task_name} has been stoped, starting service.')
+        exo_handle(True)        
