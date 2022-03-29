@@ -1,12 +1,5 @@
 import subprocess
 
-def get_all_tasks():
-    tasks = subprocess.check_output('tasklist /v').decode('cp866', 'ignore').split("\r\n")
-
-    for task in tasks:
-        print(task)
-
-
 def get_task(name):
     tasks = subprocess.check_output('tasklist /v').decode('cp866', 'ignore').split("\r\n")
 
@@ -35,4 +28,3 @@ def check_if_alive(task_name):
 
 
 check_if_alive('Eo4Run.Exe')
-#get_all_tasks()
