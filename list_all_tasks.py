@@ -1,9 +1,7 @@
 import subprocess
 
-def get_all_tasks():
+if __name__ == '__main__':
     tasks = subprocess.check_output('tasklist /v').decode('cp866', 'ignore').split("\r\n")
 
     for task in tasks:
         print(task)
-
-get_all_tasks()

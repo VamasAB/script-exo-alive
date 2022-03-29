@@ -1,30 +1,48 @@
-import subprocess
+import subprocess, logging, time, os
 
-def get_task(name):
-    tasks = subprocess.check_output('tasklist /v').decode('cp866', 'ignore').split("\r\n")
+logging.basicConfig(
+    filename='logger.log',
+    filemode='w',
+    format='%(asctime)s - %(message)s',
+    level=logging.INFO
+)
 
-    _ = []
+def get_task(task_name):
+    tasks = subprocess.check_output(f'tasklist /v /fi "IMAGENAME eq {task_name}"').decode('cp866', 'ignore').split("\r\n")
 
     for task in tasks:
-        if name in task:
-            _.append(task)
-    return _
+        if task_name in task:
+            return task
+    
+
+def exo_handle(start=False):
+    # start_uri =  'C:\Program Files\EXO\EXOop4\Eo4Run.Exe'
+    # stop_uri =  'C:\Program Files\EXO\EXOstop.exe'
+
+    name = 'Eo4Run' if start else 'EXOstop'
+    uri = 'C:\Windows\\notepad.exe' if start else 'C:\Windows\\notepad.exe'
+
+    try:
+        logging.info(f'Running {name}.')
+        status = subprocess.run(uri, check=True)
+        return status
+    except:
+        logging.info(f'{name} failed to run.')
+        return 0
 
 
-def check_if_alive(task_name):
-    task_list = get_task(task_name)
+if __name__ == '__main__':
+    logging.info('Checking for hung processes..')
+    task_name = 'firefox.exe' #'Eo4Run.Exe'
+    task = get_task(task_name)
 
-    count = len(task_list)
-
-    if count > 0:
-        print('Found {} tasks named {}'.format(count, task_name))
-        for task in task_list:
-            if 'Not Responding' in task:
-                print('Task: {} is Not responding'.format(task_name))
-            else:
-                print('Task: {} is Running or Unknown'.format(task_name))
+    if task:
+        if 'Not Responding' not in task: #in task:
+            logging.info(f'{task_name} is Not Responding, restarting services.')
+            if exo_handle() != 0:
+                time.sleep(45)
+                exo_handle(True)
+        else:
+            logging.info(f'Task {task_name} is Running or Unknown.')
     else:
-        print('No task(s) found.')
-
-
-check_if_alive('Eo4Run.Exe')
+        logging.info(f'Failed to find {task_name}.')
