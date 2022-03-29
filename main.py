@@ -33,7 +33,7 @@ def exo_handle(start=False):
 
 if __name__ == '__main__':
     logging.info('Checking for hung processes..')
-    task_name = 'firefox.exe' #'Eo4Run.Exe'
+    task_name = 'Eo4Run.Exe' #'firefox.exe'
     task = get_task(task_name)
 
     if task:
