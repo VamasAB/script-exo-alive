@@ -16,8 +16,8 @@ def get_task(task_name):
     
 
 def exo_handle(start=False):
-    # start_uri =  'C:\Program Files\EXO\EXOop4\Eo4Run.Exe'
-    # stop_uri =  'C:\Program Files\EXO\EXOstop.exe'
+    # start_uri = 'C:\Program Files\EXO\EXOop4\Eo4Run.Exe'
+    # stop_uri = 'C:\Program Files\EXO\EXOstop.exe'
 
     name = 'Eo4Run' if start else 'EXOstop'
     uri = 'C:\Windows\\notepad.exe' if start else 'C:\Windows\\notepad.exe'
@@ -41,6 +41,7 @@ if __name__ == '__main__':
             logging.info(f'{task_name} is Not Responding, restarting services.')
             if exo_handle() != 0:
                 time.sleep(45)
+                logging.info(f'{task_name} has been stoped, starting service.')
                 exo_handle(True)
         else:
             logging.info(f'Task {task_name} is Running or Unknown.')
