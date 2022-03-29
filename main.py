@@ -34,5 +34,5 @@ def check_if_alive(task_name):
         print('No task(s) found.')
 
 
-check_if_alive('firefox.exe')
+check_if_alive('Eo4Run.Exe')
 #get_all_tasks()
