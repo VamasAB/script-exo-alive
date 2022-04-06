@@ -98,7 +98,7 @@ def exo_handle(start=False):
 if __name__ == '__main__':
     logging.info('-----------------------------------------------------')
     logging.info('Checking for hung processes..')
-    task_name = ['eo4run.Exe', 'Notepad.exe']
+    task_name = ['eo4run.exe', 'Notepad.exe']
     task = get_task_status(task_name[debug])
 
     if task == 0:
