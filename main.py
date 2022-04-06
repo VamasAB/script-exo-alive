@@ -80,8 +80,8 @@ def get_task_status(task_name):
 
 
 def exo_handle(start=False):
-    start_uri = ['C:\Program Files\EXO\EXOop4\Eo4Run.Exe', 'C:\Windows\\notepad.exe']
-    stop_uri = ['C:\Program Files\EXO\EXOstop.exe', 'C:\Windows\\winhlp32.exe']
+    start_uri = ['C:\Program Files\Regin\EXOop4\eo4run.exe', 'C:\Windows\\notepad.exe']
+    stop_uri = ['C:\Program Files\Regin\EXOstop.exe', 'C:\Windows\\winhlp32.exe']
 
     name = 'Eo4Run' if start else 'EXOstop'
     uri = start_uri[debug] if start else stop_uri[debug]
@@ -98,7 +98,7 @@ def exo_handle(start=False):
 if __name__ == '__main__':
     logging.info('-----------------------------------------------------')
     logging.info('Checking for hung processes..')
-    task_name = ['Eo4Run.Exe', 'Notepad.exe']
+    task_name = ['eo4run.Exe', 'Notepad.exe']
     task = get_task_status(task_name[debug])
 
     if task == 0:
