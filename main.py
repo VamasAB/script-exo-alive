@@ -1,6 +1,7 @@
 import subprocess, logging, time, smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from tracemalloc import stop
 import environ
 
 env = environ.Env()
@@ -80,11 +81,14 @@ def get_task_status(task_name):
 
 
 def exo_handle(start=False):
-    start_uri = ['C:\Program Files\Regin\EXOop4\eo4run.exe', 'C:\Windows\\notepad.exe']
-    stop_uri = ['C:\Program Files\Regin\EXOstop.exe', 'C:\Windows\\winhlp32.exe']
+    start_uri = env.path('EXO_START_URI')
+    stop_uri = env.path('EXO_STOP_URI')
+
+    print(start_uri)
+    print(stop_uri)
 
     name = 'Eo4Run' if start else 'EXOstop'
-    uri = start_uri[debug] if start else stop_uri[debug]
+    uri = start_uri if start else stop_uri
 
     try:
         status = subprocess.Popen(uri)
@@ -98,15 +102,15 @@ def exo_handle(start=False):
 if __name__ == '__main__':
     logging.info('-----------------------------------------------------')
     logging.info('Checking for hung processes..')
-    task_name = ['eo4run.exe', 'Notepad.exe']
-    task = get_task_status(task_name[debug])
+    task_name = env.str('EXO_TASK_NAME')
+    task = get_task_status(task_name)
 
     if task == 0:
-        logging.info(f'Failed to find any running {task_name[debug]}.')
+        logging.info(f'Failed to find any running {task_name}.')
     elif task and debug == 0:
-        logging.info(f'Task {task_name[debug]} is Running or Unknown, no action required.')
+        logging.info(f'Task {task_name} is Running or Unknown, no action required.')
     else:
-        logging.info(f'{task_name[debug]} is Not Responding, restarting services.')
+        logging.info(f'{task_name} is Not Responding, restarting services.')
         
         retry = 1
         # Trying to run Exostop 5 times before exiting script        
@@ -123,12 +127,13 @@ if __name__ == '__main__':
             retry = 1
             while retry <= 5:
                 time.sleep(10)
-                logging.info(f'Starting service {task_name[debug]}, try {retry} of 5.')
-                start_status = get_task_status(task_name[debug])
+                logging.info(f'Starting service {task_name}, try {retry} of 5.')
+                start_status = get_task_status(task_name)
                 if start_status == 0:
                     task = exo_handle(True)
                     if task != 0:
-                        mail_to()
+                        if debug == 0:
+                            mail_to()
                         break
                     else:
                         retry += 1
