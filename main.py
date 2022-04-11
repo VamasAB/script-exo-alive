@@ -84,9 +84,6 @@ def exo_handle(start=False):
     start_uri = env.path('EXO_START_URI')
     stop_uri = env.path('EXO_STOP_URI')
 
-    print(start_uri)
-    print(stop_uri)
-
     name = 'Eo4Run' if start else 'EXOstop'
     uri = start_uri if start else stop_uri
 
