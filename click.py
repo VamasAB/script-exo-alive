@@ -14,7 +14,7 @@ def callback(hwnd, extra):
         x = rect[0]
         y = rect[1]
         
-        do_click(x+160,y+230)
+        do_click(x+160,y+230, True)
         
 
 def main():
