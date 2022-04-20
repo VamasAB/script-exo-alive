@@ -1,20 +1,21 @@
 import win32api, win32con, win32gui
 
-# def do_click(x,y, click=False):
-#     win32api.SetCursorPos((x,y))
+def do_click(x,y, click=False):
+    win32api.SetCursorPos((x,y))
     
-#     if click:
-#         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
-#         win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
+    if click:
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN,x,y,0,0)
+        win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP,x,y,0,0)
 
-# do_click(250,330)
 
 def callback(hwnd, extra):
     if win32gui.GetWindowText(hwnd) == 'Stop all Regin Programs':
         rect = win32gui.GetWindowRect(hwnd)
         x = rect[0]
         y = rect[1]
-        print("\tLocation: (%d, %d)" % (x, y))
+        
+        do_click(x+160,y+230)
+        
 
 def main():
     win32gui.EnumWindows(callback, None)
