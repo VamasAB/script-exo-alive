@@ -4,6 +4,24 @@ env = environ.Env()
 environ.Env.read_env()
 
 debug = env.int('DEBUG')
+delayed_start = env.int('DELAYED_START')
+program = env.str('PROGRAM')
+
+but_offset_x = env.int('BUTTON_OFFSET_X')
+but_offset_y = env.int('BUTTON_OFFSET_Y')
+
+ico_offset_x = env.int('ICON_OFFSET_X')
+ico_offset_y = env.int('ICON_OFFSET_Y')
+
+def minimize():
+    win32api.keybd_event(0x5B,0,0,0)
+    time.sleep(.1)
+    win32api.keybd_event(0x44,0,0,0)
+    time.sleep(.1)
+    win32api.keybd_event(0x44,0,win32con.KEYEVENTF_KEYUP,0)
+    time.sleep(.1)
+    win32api.keybd_event(0x5B,0,win32con.KEYEVENTF_KEYUP,0)
+    time.sleep(.1)
 
 
 def do_click(x,y, double=False):
@@ -20,21 +38,20 @@ def do_click(x,y, double=False):
             left_click()
 
 
-def callback(hwnd, extra):
-    if win32gui.GetWindowText(hwnd) == 'Stop all Regin Programs':
-        #win32gui.ShowWindow(hwnd, win32con.SW_RESTORE)
-        win32gui.SetForegroundWindow(hwnd)
-        rect = win32gui.GetWindowRect(hwnd)
-        x = rect[0]
-        y = rect[1]
-        
-        do_click(x+160,y+230)
-    
-    time.sleep(30)
-
-
 def main():
-    win32gui.EnumWindows(callback, None)
+    handle = win32gui.FindWindow(0, program)
+    win32gui.SetForegroundWindow(handle)
+    time.sleep(2)
+    rect = win32gui.GetWindowRect(handle)
+    x = rect[0] + but_offset_x
+    y = rect[1] + but_offset_y
+
+    do_click(x,y)
+
+    time.sleep(delayed_start)
+    minimize()
+    time.sleep(2)
+    do_click(ico_offset_x,ico_offset_y,True)
 
 
 if __name__ == '__main__':
